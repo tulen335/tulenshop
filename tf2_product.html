@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <title>Тюлень TF2 — SealShop</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #312e2c; color: white; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #312e2c; color: white; line-height: 1.6; }
         nav { padding: 1rem; background: #111; }
-        nav a { color: #ef6414; text-decoration: none; }
+        nav a { color: #ef6414; text-decoration: none; font-weight: bold; }
         .container { max-width: 1000px; margin: 2rem auto; display: flex; gap: 2rem; padding: 2rem; flex-wrap: wrap; }
-        .img-side img { width: 400px; border-radius: 20px; border: 5px solid #ef6414; }
-        .btn-buy { background: #ef6414; color: white; border: none; padding: 1rem 2rem; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .img-side img { width: 100%; max-width: 400px; border-radius: 10px; border: 4px solid #ef6414; }
+        .info-side { flex: 1; min-width: 300px; }
+        .btn-buy { background: #ef6414; color: white; border: none; padding: 1rem 2.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
-<nav><a href="index.html">← Назад</a> | <a href="cart.html">🛒 Кошик</a></nav>
+<nav><a href="index.html">← На головну</a> | <a href="cart.html">🛒 Кошик</a></nav>
 <div class="container">
     <div class="img-side"><img src="tf2_seal.jpeg" alt="TF2 Seal"></div>
     <div class="info-side">
         <h1 style="color: #ef6414;">Тюлень Clubsy із TF2</h1>
-        <p style="font-size: 1.5rem; font-weight: bold;">750 грн</p>
-        <p>Легендарний тюлень для справжніх найманців.</p>
+        <p style="font-size: 1.8rem; font-weight: bold;">750 грн</p>
+        <p>Легендарний тюлень прямо з оновлення Team Fortress 2. Рідкісний екземпляр для вашої колекції!</p>
         <button class="btn-buy" onclick="addToCart('Тюлень TF2', 750, 'tf2_seal.jpeg')">В інвентар!</button>
     </div>
 </div>
