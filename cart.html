@@ -2,47 +2,77 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Кошик — SealShop</title>
+    <title>Кошик та Чат — SealShop</title>
     <style>
+        :root {
+            --primary-blue: #a2d2ff;
+            --dark-blue: #0077b6;
+            --chat-bg: #e3f2fd;
+        }
         body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f0f4f8; color: #333; }
         .cart-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
         .item img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
-        .total { font-size: 1.8rem; font-weight: bold; margin-top: 25px; text-align: right; color: #0077b6; }
+        .total { font-size: 1.8rem; font-weight: bold; margin-top: 25px; text-align: right; color: var(--dark-blue); }
+        
         .btn-action { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; }
         .btn-order { background: #28a745; color: white; }
         .btn-clear { background: #ff4d4d; color: white; }
+
+        /* --- СТИЛІ ЧАТУ --- */
+        #chat-window {
+            display: none;
+            margin-top: 30px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+        }
+        .chat-header { background: var(--dark-blue); color: white; padding: 15px; font-weight: bold; text-align: center; }
+        #chat-messages { height: 250px; padding: 15px; overflow-y: auto; background: var(--chat-bg); display: flex; flex-direction: column; gap: 10px; }
         
-        /* Блок контактов разработчика */
-        #contact-dev { display: none; margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 15px; text-align: center; border: 2px dashed #0077b6; }
-        .dev-link { display: inline-block; margin-top: 10px; padding: 10px 20px; background: #0088cc; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; }
+        .message { padding: 10px 15px; border-radius: 15px; max-width: 80%; font-size: 0.95rem; }
+        .msg-dev { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg-user { background: var(--primary-blue); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #ddd; gap: 10px; }
+        .chat-input-area input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 10px; outline: none; }
+        .chat-input-area button { background: var(--dark-blue); color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; }
+
+        .back-link { display: block; text-align: center; margin-top: 20px; color: var(--dark-blue); text-decoration: none; }
     </style>
 </head>
 <body>
+
 <div class="cart-container">
-    <h1>Твій кошик 🛒</h1>
-    <div id="list"></div>
-    <div id="empty-msg" style="display:none; text-align:center; color:#888; padding: 20px;">Тут порожньо...</div>
-    
-    <div id="cart-footer">
-        <div class="total">Разом: <span id="sum">0</span> грн</div>
-        <button class="btn-action btn-order" onclick="showContacts()">Оформити замовлення</button>
-        <button class="btn-action btn-clear" onclick="clearCart()">Очистити кошик</button>
+    <div id="cart-section">
+        <h1>Твій кошик 🛒</h1>
+        <div id="list"></div>
+        <div id="empty-msg" style="display:none; text-align:center; color:#888; padding: 20px;">Тюлені ще чекають на тебе...</div>
+        
+        <div id="cart-footer">
+            <div class="total">Разом: <span id="sum">0</span> грн</div>
+            <button class="btn-action btn-order" onclick="openChat()">Оформити та написати нам</button>
+            <button class="btn-action btn-clear" onclick="clearCart()">Очистити кошик</button>
+        </div>
     </div>
 
-    <div id="contact-dev">
-        <h3>🎉 Замовлення прийнято!</h3>
-        <p>Щоб підтвердити замовлення та обговорити доставку, напишіть розробнику:</p>
-        <a href="https://t.me/your_username" target="_blank" class="dev-link">Написати у Telegram ✈️</a>
-        <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">Або Instagram: <strong>@your_insta</strong></p>
-        <br>
-        <button onclick="location.href='index.html'" style="cursor:pointer; background:none; border:none; color:#0077b6; text-decoration:underline;">Повернутися до магазину</button>
+    <div id="chat-window">
+        <div class="chat-header">Чат з розробником 🦭</div>
+        <div id="chat-messages">
+            <div class="message msg-dev">Привіт! Я отримав твоє замовлення. Напиши свою адресу та номер телефону для доставки!</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Напишіть повідомлення...">
+            <button onclick="sendMessage()">Відправити</button>
+        </div>
     </div>
 
-    <p style="text-align:center; margin-top: 20px;"><a href="index.html" style="color:#0077b6;">← Назад до каталогу</a></p>
+    <a href="index.html" class="back-link">← Назад до магазину</a>
 </div>
 
 <script>
+    // Логіка кошика
     function renderCart() {
         let cart = JSON.parse(localStorage.getItem('sealCart')) || [];
         let list = document.getElementById('list');
@@ -77,17 +107,54 @@
         renderCart();
     }
 
-    function showContacts() {
-        // Скрываем кошик и показываем контакты
-        document.getElementById('list').style.display = 'none';
-        document.getElementById('cart-footer').style.display = 'none';
-        document.getElementById('contact-dev').style.display = 'block';
+    // Логіка чату
+    function openChat() {
+        const cart = JSON.parse(localStorage.getItem('sealCart')) || [];
+        if(cart.length === 0) return alert("Кошик порожній!");
+
+        document.getElementById('cart-section').style.display = 'none';
+        document.getElementById('chat-window').style.display = 'block';
         
-        // Очищаем кошик (заказ ведь уже "сделан")
-        localStorage.removeItem('sealCart');
+        // Автоматичне повідомлення про замовлення
+        let orderDetails = cart.map(i => i.name).join(", ");
+        addMessage(`Я хочу замовити: ${orderDetails}`, 'user');
+        
+        localStorage.removeItem('sealCart'); // Очищуємо кошик після переходу в чат
+    }
+
+    function sendMessage() {
+        let input = document.getElementById('user-input');
+        if (input.value.trim() === "") return;
+
+        addMessage(input.value, 'user');
+        
+        // Імітація відповіді розробника через 1 секунду
+        setTimeout(() => {
+            addMessage("Дякую! Я отримав ваше повідомлення. Перевіряю наявність тюленів...", 'dev');
+        }, 1500);
+
+        input.value = "";
+    }
+
+    function addMessage(text, side) {
+        let chatBox = document.getElementById('chat-messages');
+        let msgDiv = document.createElement('div');
+        msgDiv.classList.add('message');
+        msgDiv.classList.add(side === 'user' ? 'msg-user' : 'msg-dev');
+        msgDiv.innerText = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Прокрутка вниз
     }
 
     renderCart();
+
+    // Відправка по Enter
+    document.getElementById('user-input').addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
 </script>
+
 </body>
 </html>
