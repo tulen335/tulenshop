@@ -2,103 +2,92 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кошик — SealShop</title>
     <style>
-        :root {
-            --primary-blue: #a2d2ff;
-            --dark-blue: #0077b6;
-            --soft-white: #f8f9fa;
-        }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--soft-white); color: #333; }
-        nav { padding: 1.5rem 2rem; background: white; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-        nav a { text-decoration: none; color: var(--dark-blue); font-weight: bold; }
-
-        .container { max-width: 800px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        h1 { border-bottom: 2px solid var(--primary-blue); padding-bottom: 10px; }
-
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #eee; }
-        .item-info { display: flex; align-items: center; gap: 1rem; }
-        .item-info img { width: 60px; height: 60px; object-fit: cover; border-radius: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f0f4f8; color: #333; }
+        .cart-container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
+        .item img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
+        .total { font-size: 1.8rem; font-weight: bold; margin-top: 25px; text-align: right; color: #0077b6; }
+        .btn-action { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        .btn-order { background: #28a745; color: white; }
+        .btn-clear { background: #ff4d4d; color: white; }
         
-        .empty-msg { text-align: center; padding: 3rem; color: #888; }
-        .total { text-align: right; font-size: 1.5rem; font-weight: bold; margin-top: 2rem; }
-        
-        .btn-checkout { width: 100%; background: #28a745; color: white; border: none; padding: 1rem; border-radius: 10px; font-size: 1.2rem; cursor: pointer; margin-top: 1rem; }
-        .btn-clear { background: #ff4d4d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
+        /* Блок контактов разработчика */
+        #contact-dev { display: none; margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 15px; text-align: center; border: 2px dashed #0077b6; }
+        .dev-link { display: inline-block; margin-top: 10px; padding: 10px 20px; background: #0088cc; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-
-<nav>
-    <a href="index.html">← Повернутися до магазину</a>
-</nav>
-
-<div class="container">
-    <h1>Ваш кошик 🛒</h1>
-    <div id="cart-content">
-        </div>
-    <div id="cart-footer" style="display:none;">
-        <div class="total">Разом: <span id="total-price">0</span> грн</div>
-        <button class="btn-checkout" onclick="checkout()">Оформити замовлення</button>
-        <button class="btn-clear" onclick="clearCart()" style="margin-top: 10px;">Очистити кошик</button>
+<div class="cart-container">
+    <h1>Твій кошик 🛒</h1>
+    <div id="list"></div>
+    <div id="empty-msg" style="display:none; text-align:center; color:#888; padding: 20px;">Тут порожньо...</div>
+    
+    <div id="cart-footer">
+        <div class="total">Разом: <span id="sum">0</span> грн</div>
+        <button class="btn-action btn-order" onclick="showContacts()">Оформити замовлення</button>
+        <button class="btn-action btn-clear" onclick="clearCart()">Очистити кошик</button>
     </div>
+
+    <div id="contact-dev">
+        <h3>🎉 Замовлення прийнято!</h3>
+        <p>Щоб підтвердити замовлення та обговорити доставку, напишіть розробнику:</p>
+        <a href="https://t.me/your_username" target="_blank" class="dev-link">Написати у Telegram ✈️</a>
+        <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">Або Instagram: <strong>@your_insta</strong></p>
+        <br>
+        <button onclick="location.href='index.html'" style="cursor:pointer; background:none; border:none; color:#0077b6; text-decoration:underline;">Повернутися до магазину</button>
+    </div>
+
+    <p style="text-align:center; margin-top: 20px;"><a href="index.html" style="color:#0077b6;">← Назад до каталогу</a></p>
 </div>
 
 <script>
-    function displayCart() {
-        const cart = JSON.parse(localStorage.getItem('sealCart')) || [];
-        const container = document.getElementById('cart-content');
-        const footer = document.getElementById('cart-footer');
-        let total = 0;
+    function renderCart() {
+        let cart = JSON.parse(localStorage.getItem('sealCart')) || [];
+        let list = document.getElementById('list');
+        let footer = document.getElementById('cart-footer');
+        let empty = document.getElementById('empty-msg');
+        let sum = 0;
 
+        list.innerHTML = '';
         if (cart.length === 0) {
-            container.innerHTML = '<div class="empty-msg">Тут поки що порожньо... Тюлені сумують 🦭</div>';
+            empty.style.display = 'block';
             footer.style.display = 'none';
-            return;
-        }
-
-        footer.style.display = 'block';
-        container.innerHTML = '';
-        
-        cart.forEach((item, index) => {
-            total += item.price;
-            container.innerHTML += `
-                <div class="cart-item">
-                    <div class="item-info">
-                        <img src="${item.image}" alt="">
-                        <div>
-                            <strong>${item.name}</strong><br>
-                            <span>${item.price} грн</span>
+        } else {
+            empty.style.display = 'none';
+            footer.style.display = 'block';
+            cart.forEach(item => {
+                sum += item.price;
+                list.innerHTML += `
+                    <div class="item">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${item.image}">
+                            <span>${item.name}</span>
                         </div>
-                    </div>
-                    <button class="btn-clear" onclick="removeItem(${index})">Видалити</button>
-                </div>
-            `;
-        });
-
-        document.getElementById('total-price').innerText = total;
-    }
-
-    function removeItem(index) {
-        let cart = JSON.parse(localStorage.getItem('sealCart'));
-        cart.splice(index, 1);
-        localStorage.setItem('sealCart', JSON.stringify(cart));
-        displayCart();
+                        <b>${item.price} грн</b>
+                    </div>`;
+            });
+            document.getElementById('sum').innerText = sum;
+        }
     }
 
     function clearCart() {
         localStorage.removeItem('sealCart');
-        displayCart();
+        renderCart();
     }
 
-    function checkout() {
-        alert('Дякуємо за замовлення! Наш менеджер-тюлень скоро зв’яжеться з вами.');
-        clearCart();
+    function showContacts() {
+        // Скрываем кошик и показываем контакты
+        document.getElementById('list').style.display = 'none';
+        document.getElementById('cart-footer').style.display = 'none';
+        document.getElementById('contact-dev').style.display = 'block';
+        
+        // Очищаем кошик (заказ ведь уже "сделан")
+        localStorage.removeItem('sealCart');
     }
 
-    displayCart();
+    renderCart();
 </script>
-
 </body>
 </html>
