@@ -8,11 +8,12 @@
         :root { --primary-blue: #a2d2ff; --dark-blue: #0077b6; --soft-white: #f8f9fa; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--soft-white); }
         header { background: var(--primary-blue); color: white; padding: 2rem; text-align: center; }
-        header a { color: white; text-decoration: none; border: 1px solid white; padding: 5px 15px; border-radius: 20px; }
+        header a { color: white; text-decoration: none; border: 1px solid white; padding: 8px 20px; border-radius: 20px; transition: 0.3s; }
+        header a:hover { background: white; color: var(--primary-blue); }
         .catalog { max-width: 1100px; margin: 3rem auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 0 1rem; }
         .product-card { background: white; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); text-align: center; overflow: hidden; transition: 0.3s; }
         .product-card:hover { transform: translateY(-8px); }
-        .img-box { height: 250px; background: #e0f2fe; }
+        .img-box { height: 250px; background: #e0f2fe; overflow: hidden; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
         .info { padding: 1.5rem; }
         .price { font-size: 1.4rem; font-weight: bold; color: var(--dark-blue); display: block; margin: 1rem 0; }
@@ -23,7 +24,8 @@
 <header>
     <h1>🦭 SealShop</h1>
     <p>Найкращі тюлені України</p>
-    <a href="cart.html">🛒 Кошик</a>
+    <br>
+    <a href="cart.html">🛒 Мій кошик</a>
 </header>
 <div class="catalog">
     <div class="product-card">
