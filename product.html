@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Класичний Тюлень — SealShop</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; line-height: 1.6; }
+        nav { padding: 1rem; background: #eee; }
+        .container { max-width: 1000px; margin: 2rem auto; display: flex; gap: 2rem; padding: 2rem; flex-wrap: wrap; }
+        .img-side img { width: 400px; border-radius: 20px; }
+        .btn-buy { background: #0077b6; color: white; border: none; padding: 1rem 2rem; border-radius: 30px; cursor: pointer; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+<nav><a href="index.html">← Назад</a> | <a href="cart.html">🛒 Кошик</a></nav>
+<div class="container">
+    <div class="img-side"><img src="seal.jpeg" alt="Тюлень"></div>
+    <div class="info-side">
+        <h1>Класичний Тюлень</h1>
+        <p style="font-size: 1.5rem; font-weight: bold;">550 грн</p>
+        <p>М'який, сірий та дуже затишний друг.</p>
+        <button class="btn-buy" onclick="addToCart('Класичний Тюлень', 550, 'seal.jpeg')">Додати в кошик</button>
+    </div>
+</div>
+<script>
+function addToCart(name, price, image) {
+    let cart = JSON.parse(localStorage.getItem('sealCart')) || [];
+    cart.push({name, price, image});
+    localStorage.setItem('sealCart', JSON.stringify(cart));
+    alert('Тюлень у кошику! 🦭');
+}
+</script>
+</body>
+</html>
